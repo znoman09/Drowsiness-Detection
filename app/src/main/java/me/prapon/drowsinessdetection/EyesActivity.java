@@ -33,7 +33,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -50,7 +49,6 @@ import java.io.IOException;
 import me.prapon.drowsinessdetection.vision.CameraSourcePreview;
 import me.prapon.drowsinessdetection.vision.FaceTracker;
 import me.prapon.drowsinessdetection.vision.GraphicOverlay;
-
 
 
 public class EyesActivity extends AppCompatActivity {
@@ -81,10 +79,9 @@ public class EyesActivity extends AppCompatActivity {
         // permission is not granted yet, request permission.
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            if(j ==1)
-            {
+            if (j == 1) {
                 mCameraSource.release();
-                mGraphicOverlay=null;
+                mGraphicOverlay = null;
                 mCameraSource = null;
                 Intent myIntent = new Intent(EyesActivity.this, AlarmScreen.class);
                 startActivity(myIntent);
@@ -145,7 +142,7 @@ public class EyesActivity extends AppCompatActivity {
         mPreview.stop();
     }
 
-    public void pause(){
+    public void pause() {
         onDestroy();
     }
 
@@ -245,7 +242,9 @@ public class EyesActivity extends AppCompatActivity {
         if (mIsFrontFacing) {
             // For front facing mode
 
-            Tracker<Face> tracker = new FaceTracker(mGraphicOverlay);
+            // Code Correction
+            // Passing EyeActivity Context
+            Tracker<Face> tracker = new FaceTracker(mGraphicOverlay, EyesActivity.this);
             processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
         } else {
             // For rear facing mode, a factory is used to create per-face tracker instances.
@@ -253,7 +252,9 @@ public class EyesActivity extends AppCompatActivity {
             MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
                 @Override
                 public Tracker<Face> create(Face face) {
-                    return new FaceTracker(mGraphicOverlay);
+                    // Code Correction
+                    // Passing EyeActivity Context
+                    return new FaceTracker(mGraphicOverlay, EyesActivity.this);
                 }
             };
             processor = new MultiProcessor.Builder<>(factory).build();
@@ -318,17 +319,15 @@ public class EyesActivity extends AppCompatActivity {
 
         if (mCameraSource != null) {
             try {
-                if(j ==1)
-                {
+                if (j == 1) {
                     mCameraSource.release();
-                    mGraphicOverlay=null;
+                    mGraphicOverlay = null;
                     mCameraSource = null;
                     Intent myIntent = new Intent(EyesActivity.this, AlarmScreen.class);
                     startActivity(myIntent);
-                }
-                else{
+                } else {
                     int i = mPreview.start(mCameraSource, mGraphicOverlay);
-                    j =i;
+                    j = i;
                 }
 
             } catch (IOException e) {
@@ -339,4 +338,3 @@ public class EyesActivity extends AppCompatActivity {
         }
     }
 }
-

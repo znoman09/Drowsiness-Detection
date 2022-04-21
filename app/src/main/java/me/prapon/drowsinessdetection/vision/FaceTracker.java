@@ -26,6 +26,8 @@ import com.google.android.gms.vision.face.Landmark;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.prapon.drowsinessdetection.EyesActivity;
+
 /**
  * Tracks the eye positions and state over time, managing an underlying graphic which renders googly
  * eyes over the source video.<p>
@@ -41,6 +43,8 @@ public class FaceTracker extends Tracker<Face> {
 
     private GraphicOverlay mOverlay;
     private EyesGraphics mEyesGraphics;
+    // Code Correction
+    private EyesActivity context;
 
     // Record the previously seen proportions of the landmark locations relative to the bounding box
     // of the face.  These proportions can be used to approximate where the landmarks are within the
@@ -58,8 +62,9 @@ public class FaceTracker extends Tracker<Face> {
     // Methods
     //==============================================================================================
 
-    public FaceTracker(GraphicOverlay overlay) {
+    public FaceTracker(GraphicOverlay overlay, EyesActivity context) {
         mOverlay = overlay;
+        this.context = context;
     }
 
     /**
@@ -67,7 +72,8 @@ public class FaceTracker extends Tracker<Face> {
      */
     @Override
     public void onNewItem(int id, Face face) {
-        mEyesGraphics = new EyesGraphics(mOverlay);
+        // Code Correction
+        mEyesGraphics = new EyesGraphics(mOverlay, context);
     }
 
     /**
